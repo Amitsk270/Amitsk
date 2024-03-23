@@ -1,0 +1,61 @@
+---
+- hosts: demo
+  connection: ssh
+  become: yes
+  user: ansible
+  tasks:
+    - name: Partition the disk using fdisk
+      shell: | 
+        echo -e "n\np\n\n\n204800\nt\n8e\nw" | sudo fdisk /dev/xvdb
+      become: true
+      become_user: root
+    - name: Wait for device to be available
+      wait_for:
+        path: /dev/xvdb1
+        state: present
+      become: true
+      become_user: root
+
+    - name: Create physical volume
+      command: pvcreate /dev/xvdb1
+      become: true
+
+    - name: Create volume group
+      command: vgcreate ubuntu-vg2 /dev/xvdb1
+      become: true
+
+    - name: Display volume group details
+      command: vgdisplay -v ubuntu-vg2
+      become: true
+
+    - name: Create logical volume
+      command: lvcreate -l 100%FREE -n lv-dataa ubuntu-vg2
+      become: true
+
+    - name: Format the logical volume
+      command: mkfs.ext4 /dev/ubuntu-vg2/lv-dataa
+      become: true
+
+    - name: creating the directory
+      command: mkdir /data
+      become: true
+
+    - name: Get UUID of /dev/xvda1
+      command: blkid -s UUID -o value /dev/xvda1
+      register: blkid_output
+    - debug:
+        msg: "UUID of /dev/xvda1 is {{ blkid_output.stdout }}"
+
+    - set_fact:
+        fstab_entry: "UUID={{ blkid_output.stdout }} /data ext4 defaults 0 0"
+
+    - name: Add entry to /etc/fstab
+      lineinfile:
+        path: /etc/fstab
+        line: "{{ fstab_entry }}"
+      become: true
+      become_user: root
+
+    - name: Mounting the file /data
+      command: mount /dev/ubuntu-vg2/lv-dataa /data
+      become: true
