@@ -1,0 +1,20 @@
+---
+- hosts: demo
+  become: yes
+  tasks:
+    - name: Get UUID of /dev/xvda1
+      command: blkid -s UUID -o value /dev/xvda1
+      register: blkid_output
+    - debug:
+        msg: "UUID of /dev/xvda1 is {{ blkid_output.stdout }}"
+
+    - set_fact:
+        fstab_entry: "UUID={{ blkid_output.stdout }} /data ext4 defaults 0 0"
+
+    - name: Add entry to /etc/fstab
+      lineinfile:
+        path: /etc/fstab
+        line: "{{ fstab_entry }}"
+      become: true
+      become_user: root
+

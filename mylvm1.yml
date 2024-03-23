@@ -1,0 +1,10 @@
+---
+- hosts: demo
+  connection: ssh
+  become: yes
+  user: ansible
+  tasks:
+    - name: Partition the disk using fdisk
+      shell: |
+        echo -e "n\np\n\n\n204800\nt\n8e\nw" | sudo fdisk /dev/xvdb >> fdisk_error.log
+      become: true
