@@ -1,0 +1,32 @@
+---
+- hosts: demo
+  connection: ssh
+  become: yes
+  user: ansible
+  vars:
+    my_password: "$6$JBTrBNbDW6ybsyOB$l4zT4J5tTS/Aw0mRGJE7TA/Ltkp2Qwg0R5TjjtIJuQ4mXklirPt9rxZuCNwvxcv2j9yztnZZ5EMAw9o0x.KAN/"
+    users:
+      - radhe1233
+      - test11233
+      - abc1233
+  tasks:
+    - name: Addition of the users
+      user:
+        name: "{{ item }}"
+        password: "{{ my_password }}"
+        state: present
+      loop: "{{ users }}"
+      ignore_errors: yes
+
+    - name: Add entries to /etc/sudoers
+      lineinfile:
+        path: /etc/sudoers
+        line: "{{ item }} ALL=(ALL) ALL"
+        insertafter: EOF
+      loop: "{{ users }}"
+      become: true
+      become_user: root
+
+    - debug:
+        msg: "Completely added the sudoers entries"
+
