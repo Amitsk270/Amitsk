@@ -4,13 +4,19 @@
   connection: ssh
   user: ansible
   tasks:
-    - name: syncing the file from one place to another place
-      copy:
-        src: /etc/sudoers
-        dest: /etc/sudoers
-        validate: /usr/sbin/visudo -csf %s #it validate the syntax of the file and give the error if something is wrong
-        owner: root  #the file should own the permission after copying the file
-        group: root  #the file should own the permission after copying the file
-        mode: '0744'
-        backup: yes
-      become_user: root
+    #- name: syncing the file from one place to another place
+    #  copy:
+    #    src: /etc/sudoers
+    #    dest: /etc/sudoers
+    #    validate: /usr/sbin/visudo -csf %s #it validate the syntax of the file and give the error if something is wrong
+    #    owner: root  #the file should own the permission after copying the file
+    #   group: root  #the file should own the permission after copying the file
+    #   mode: '0744'
+    #   backup: yes
+    #become_user: root
+    - name: syncing the directory
+      synchronize:   #synchronize the directory past
+        src: /home/ansible/amit/rahul
+        dest: /home/ansible/test/amit
+        recursive: yes
+
