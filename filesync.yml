@@ -18,5 +18,6 @@
       synchronize:   #synchronize the directory past
         src: /home/ansible/amit/rahul
         dest: /home/ansible/test/amit
+        delete: true #delete the files in destination if the files are not there in src
         recursive: yes
 
