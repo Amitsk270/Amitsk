@@ -40,11 +40,11 @@
       command: mkdir /data
       become: true
 
-    - name: Get UUID of /dev/xvda1
-      command: blkid -s UUID -o value /dev/xvda1
+    - name: Get UUID of /dev/mapper/ubuntu--vg2-lv--dataa
+      command: blkid -s UUID -o value /dev/mapper/ubuntu--vg2-lv--dataa
       register: blkid_output
     - debug:
-        msg: "UUID of /dev/xvda1 is {{ blkid_output.stdout }}"
+        msg: "UUID of /dev/mapper/ubuntu--vg2-lv--dataa is {{ blkid_output.stdout }}"
 
     - set_fact:
         fstab_entry: "UUID={{ blkid_output.stdout }} /data ext4 defaults 0 0"
@@ -59,3 +59,4 @@
     - name: Mounting the file /data
       command: mount /dev/ubuntu-vg2/lv-dataa /data
       become: true
+
