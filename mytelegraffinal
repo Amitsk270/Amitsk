@@ -1,0 +1,14 @@
+#telegraf docker file
+FROM telegraf:latest
+
+#installing the packages which are required
+RUN apt-get update && apt install -y vim && apt install -y sudo && apt install -y net-tools
+RUN adduser vunet
+USER root
+RUN echo "vunet ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers >/dev/null
+#adding the user
+USER vunet
+COPY telegraf.conf /etc/telegraf/
+WORKDIR etc/telegraf
+LABEL maintainer=amitsk
+
