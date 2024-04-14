@@ -16,6 +16,7 @@ RUN echo "vunet ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers >/dev/null
 #WORKDIR /amit/stack
 USER vunet
 WORKDIR /amit/stack
-COPY test.txt /amit/stack
-RUN chown -R vunet:vunet /amit/stack
+COPY amit/test.txt /amit/stack
+ADD https://github.com/Amitsk270/Amitsk.git /amit/stack
+RUN sudo chown -R vunet:vunet /amit/stack
 LABEL maintainer="amitsk"
