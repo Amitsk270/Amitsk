@@ -1,0 +1,19 @@
+#telegraf docker file
+FROM telegraf:latest
+
+#installing the packages which are required
+RUN apt-get update && apt install -y vim && apt install -y sudo && apt install -y net-tools
+RUN adduser vunet
+RUN mkdir -p /app
+USER root
+RUN chown vunet:vunet /app
+RUN echo "vunet ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers >/dev/null
+#adding the user
+USER vunet
+COPY telegraf.conf /etc/telegraf/
+WORKDIR amit/telegraf
+LABEL maintainer=amitsk
+EXPOSE 8125
+VOLUME /app/amit
+RUN mkdir -p /app/amit && chown -R vunet:vunet /app/amit
+
