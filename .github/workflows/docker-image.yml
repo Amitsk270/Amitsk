@@ -21,7 +21,7 @@ jobs:
       with:
         registry: ghcr.io
         username: Amitsk270  # GitHub Actions username (automatically set)
-        password: "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"  # PAT stored as GHCR_TOKEN
+        password: "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"  # PAT stored as GHCR_TOKEN
 
     - name: Build and push to GHCR
       uses: docker/build-push-action@v2
