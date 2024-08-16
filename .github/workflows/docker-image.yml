@@ -20,7 +20,7 @@ jobs:
       uses: docker/login-action@v1
       with:
         registry: ghcr.io
-        username: ${{ github.actor }}  # GitHub Actions username (automatically set)
+        username: Amitsk270  # GitHub Actions username (automatically set)
         password: "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"  # PAT stored as GHCR_TOKEN
 
     - name: Build and push to GHCR
